@@ -1,0 +1,81 @@
+/* Main Sections */
+
+body {
+    background-color: lavender;
+}
+
+.my-header,
+.my-footer {
+    background-color: darkgray;
+    text-align: center;
+    color: white;
+}
+
+.my-left {
+    background-color: lightgray;
+}
+
+.my-main {
+    background-color: white;
+    padding: 20px;
+}
+
+.my-right {
+    background-color: lightgray;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.my-insert {
+    background-color: lightgray;
+    padding: 40px 0 20px 0;
+}
+
+.my-update {
+    background-color: lightgray;
+    padding: 20px 0 40px 0;
+}
+
+
+/* Buttons */
+
+button {
+    width: 70px;
+}
+
+#btn-employees-clear {
+    margin-left: 10px;
+}
+
+#btn-employee-insert,
+#btn-employee-update {
+    margin-top: 4px;
+}
+
+#btn-employees-show-insert-form {
+    margin-top: 12px;
+    margin-left: -84px;
+    margin-bottom: 20px;
+}
+
+/* Tables */
+
+table {
+    margin-left: 20px;
+}
+
+th {
+    width: 100px;
+}
+
+/* Forms */
+
+::placeholder {
+    font-weight: 100;
+}
+
+/* Other */
+
+.my-hidden {
+    display: none;
+}

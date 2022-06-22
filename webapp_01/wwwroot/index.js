@@ -217,7 +217,8 @@ function refreshEmployeeTable(employees) {
         employeeRows += '<td>' + employee.employeeId + '</td>';
         employeeRows += '<td>' + employee.firstName + '</td>';
         employeeRows += '<td>' + employee.lastName + '</td>';
-        employeeRows += '<td>' + employee.salary + '</td>'
+        employeeRows += '<td>' + employee.salary + '</td>';
+        employeeRows += '<td><img src="' + employee.imagePath + '" /></td>';
         employeeRows += '<td>' + '<button data-employee-id="' + employee.employeeId + '" data-first-name="' + employee.firstName + '" data-last-name="' + employee.lastName + '" data-salary="' + employee.salary + '" type="button" class="btn-employee-update btn btn-outline-secondary btn-sm">Update</button>' + '</td>'
         employeeRows += '<td>' + '<button data-employee-id="' + employee.employeeId + '" type="button" class="btn-employee-delete btn btn-outline-secondary btn-sm">Delete</button>' + '</td>'
         employeeRows += '</tr>';

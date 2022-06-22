@@ -10,12 +10,13 @@ namespace webapi_01
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public decimal? Salary { get; set; }
+        public string ImagePath { get; set; }
 
         public static List<Employee> SelectEmployees(SqlConnection sqlConnection)
         {
             List<Employee> employees = new List<Employee>();
 
-            string sql = "select EmployeeId, LastName, FirstName, Salary from Employee;";
+            string sql = "select EmployeeId, LastName, FirstName, Salary, ImagePath from Employee;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -31,6 +32,7 @@ namespace webapi_01
                         employee.LastName = sqlDataReader["LastName"].ToString();
                         employee.FirstName = sqlDataReader["FirstName"].ToString();
                         employee.Salary = (sqlDataReader["Salary"].ToString().Length == 0) ? null : Convert.ToDecimal(sqlDataReader["Salary"]);
+                        employee.ImagePath = sqlDataReader["ImagePath"].ToString();
                         employees.Add(employee);
                     }
                 }

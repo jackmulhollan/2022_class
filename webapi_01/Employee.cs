@@ -11,16 +11,25 @@ namespace webapi_01
         public string FirstName { get; set; }
         public decimal? Salary { get; set; }
         public string ImagePath { get; set; }
+        public int EmployeeCount { get; set; }
 
-        public static List<Employee> SelectEmployees(SqlConnection sqlConnection)
+        public static List<Employee> SearchEmployees(string search, int pageSize, int pageNumber, SqlConnection sqlConnection)
         {
             List<Employee> employees = new List<Employee>();
 
-            string sql = "select EmployeeId, LastName, FirstName, Salary, ImagePath from Employee;";
+            string sql = "select p.EmployeeID, e.FirstName, e.LastName, e.Salary, e.ImagePath, p.[Count] from (select EmployeeID, count(*) over () AS [Count] from Employee where LastName like '%' + @Search + '%' or FirstName like '%' + @Search + '%' order by EmployeeId offset @PageSize * (@PageNumber - 1) rows fetch next @PageSize rows only) p join Employee e on p.EmployeeId = e.EmployeeId order by 1;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
                 sqlCommand.CommandType = System.Data.CommandType.Text;
+
+                sqlCommand.Parameters.Add("@PageSize", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@PageNumber", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@Search", System.Data.SqlDbType.VarChar);
+
+                sqlCommand.Parameters["@PageSize"].Value = pageSize;
+                sqlCommand.Parameters["@PageNumber"].Value = pageNumber;
+                sqlCommand.Parameters["@Search"].Value = search;
 
                 using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
                 {
@@ -33,6 +42,7 @@ namespace webapi_01
                         employee.FirstName = sqlDataReader["FirstName"].ToString();
                         employee.Salary = (sqlDataReader["Salary"].ToString().Length == 0) ? null : Convert.ToDecimal(sqlDataReader["Salary"]);
                         employee.ImagePath = sqlDataReader["ImagePath"].ToString();
+                        employee.EmployeeCount = Convert.ToInt32(sqlDataReader["Count"]);
                         employees.Add(employee);
                     }
                 }
@@ -40,7 +50,6 @@ namespace webapi_01
 
             return employees;
         }
-
         public static int InsertEmployee(string lastName, string firstName, decimal salary, SqlConnection sqlConnection)
         {
             string sql = "insert into Employee (LastName, FirstName, Salary) values (@LastName, @FirstName, @Salary);";

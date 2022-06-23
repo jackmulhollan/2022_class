@@ -24,8 +24,8 @@ namespace webapi_01.Controllers
 
 
         [HttpGet]
-        [Route("/SelectEmployees")]
-        public Response SelectEmployees()
+        [Route("/SearchEmployees")]
+        public Response SearchEmployees(string search, int pageSize, int pageNumber)
         {
             Response response = new Response();
             List<Employee> employees = new List<Employee>();
@@ -35,7 +35,7 @@ namespace webapi_01.Controllers
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    employees = Employee.SelectEmployees(sqlConnection);
+                    employees = Employee.SearchEmployees(search ?? "", pageSize, pageNumber, sqlConnection);
                     response.result = Result.success.ToString();
                     response.rowsAffected = 0;
                 }
@@ -53,7 +53,7 @@ namespace webapi_01.Controllers
 
         [HttpGet]
         [Route("/InsertEmployee")]
-        public Response InsertEmployee(string lastName, string firstName, decimal salary)
+        public Response InsertEmployee(string lastName, string firstName, decimal salary, string search, int pageSize, int pageNumber)
         {
             Response response = new Response();
             List<Employee> employees = new List<Employee>();
@@ -68,7 +68,7 @@ namespace webapi_01.Controllers
                     sqlConnection.Open();
                     rowsAffected = Employee.InsertEmployee(lastName, firstName, salary, sqlConnection);
                     result = Result.success.ToString();
-                    employees = Employee.SelectEmployees(sqlConnection);
+                    employees = Employee.SearchEmployees(search ?? "", pageSize, pageNumber, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -86,7 +86,7 @@ namespace webapi_01.Controllers
 
         [HttpGet]
         [Route("/UpdateEmployee")]
-        public Response UpdateEmployee(int employeeId, string lastName, string firstName, decimal salary)
+        public Response UpdateEmployee(int employeeId, string lastName, string firstName, decimal salary, string search, int pageSize, int pageNumber)
         {
             Response response = new Response();
             List<Employee> employees = new List<Employee>();
@@ -101,7 +101,7 @@ namespace webapi_01.Controllers
                     sqlConnection.Open();
                     rowsAffected = Employee.UpdateEmployee(employeeId, lastName, firstName, salary, sqlConnection);
                     result = Result.success.ToString();
-                    employees = Employee.SelectEmployees(sqlConnection);
+                    employees = Employee.SearchEmployees(search ?? "", pageSize, pageNumber, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -120,7 +120,7 @@ namespace webapi_01.Controllers
 
         [HttpGet]
         [Route("/DeleteEmployee")]
-        public Response DeleteEmployee(int employeeId)
+        public Response DeleteEmployee(int employeeId, string search, int pageSize, int pageNumber)
         {
             Response response = new Response();
             List<Employee> employees = new List<Employee>();
@@ -135,7 +135,7 @@ namespace webapi_01.Controllers
                     sqlConnection.Open();
                     rowsAffected = Employee.DeleteEmployee(employeeId, sqlConnection);
                     result = Result.success.ToString();
-                    employees = Employee.SelectEmployees(sqlConnection);
+                    employees = Employee.SearchEmployees(search ?? "", pageSize, pageNumber, sqlConnection);
                 }
                 catch (Exception ex)
                 {

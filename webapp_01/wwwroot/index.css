@@ -47,6 +47,11 @@ button {
     margin-left: 10px;
 }
 
+#btn-employees-prev,
+#btn-employees-next {
+    margin-top: 12px;
+}
+
 #btn-employee-insert,
 #btn-employee-update {
     margin-top: 4px;

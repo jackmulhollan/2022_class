@@ -1,6 +1,14 @@
 
-var buttonEmployeesSelect = document.getElementById("btn-employees-select");
-var buttonEmployeesClear = document.getElementById("btn-employees-clear");
+
+var pageSize = 8;
+var pageNumber = 1;
+
+// var buttonEmployeesSelect = document.getElementById("btn-employees-select");
+// var buttonEmployeesClear = document.getElementById("btn-employees-clear");
+var inputEmployeesSearch = document.getElementById("employees-search");
+var buttonEmployeesPrev = document.getElementById("btn-employees-prev");
+var buttonEmployeesNext = document.getElementById("btn-employees-next");
+var labelEmployeePaginationMessage = document.getElementById("employee-pagination-message");
 var buttonEmployeesShowInsertForm = document.getElementById("btn-employees-show-insert-form");
 
 var buttonEmployeeInsertSave = document.getElementById("btn-employee-insert-save");
@@ -9,19 +17,26 @@ var buttonEmployeeUpdateSave = document.getElementById("btn-employee-update-save
 var buttonEmployeeUpdateCancel = document.getElementById("btn-employee-update-cancel");
 var dynamicEmployeeRows = document.getElementById("dynamic-employee_rows");
 
-buttonEmployeesSelect.addEventListener("click", selectEmployees);
-buttonEmployeesClear.addEventListener("click", clearEmployees);
+// buttonEmployeesSelect.addEventListener("click", selectEmployees);
+// buttonEmployeesClear.addEventListener("click", clearEmployees);
+inputEmployeesSearch.addEventListener("keyup", handleKeyup);
+buttonEmployeesPrev.addEventListener("click", showEmployeesPrev);
+buttonEmployeesNext.addEventListener("click", showEmployeesNext);
 buttonEmployeesShowInsertForm.addEventListener("click", showEmployeeInsertForm);
 buttonEmployeeInsertSave.addEventListener("click", insertEmployeeSave);
 buttonEmployeeInsertCancel.addEventListener("click", insertEmployeeCancel);
 buttonEmployeeUpdateSave.addEventListener("click", updateEmployeeSave);
 buttonEmployeeUpdateCancel.addEventListener("click", updateEmployeeCancel);
 
+function handleKeyup() {
+    pageNumber = 1;
+    searchEmployees();
+}
 
-
-function selectEmployees() {
-    var baseURL = "https://localhost:5001/SelectEmployees";
-    var queryString = "";
+function searchEmployees() {
+    var baseURL = "https://localhost:5001/SearchEmployees";
+    var search = inputEmployeesSearch.value;
+    var queryString = "?search=" + search + "&pagesize=" + pageSize + "&pagenumber=" + pageNumber;
 
     var xhr = new XMLHttpRequest();
 
@@ -59,7 +74,8 @@ function insertEmployeeSave() {
     var salary = inputSalary.value;
 
     var baseURL = "https://localhost:5001/InsertEmployee";
-    var queryString = "?firstName=" + firstName + "&lastName=" + lastName + "&salary=" + salary;
+    var search = inputEmployeesSearch.value;
+    var queryString = "?firstName=" + firstName + "&lastName=" + lastName + "&salary=" + salary + "&search=" + search + "&pagesize=" + pageSize + "&pagenumber=" + pageNumber;
 
     var xhr = new XMLHttpRequest();
 
@@ -115,7 +131,8 @@ function updateEmployeeSave() {
     var salary = inputSalary.value;
 
     var baseURL = "https://localhost:5001/UpdateEmployee";
-    var queryString = "?employeeId=" + employeeId + "&firstName=" + firstName + "&lastName=" + lastName + "&salary=" + salary;
+    var search = inputEmployeesSearch.value;
+    var queryString = "?employeeId=" + employeeId + "&firstName=" + firstName + "&lastName=" + lastName + "&salary=" + salary + "&search=" + search + "&pagesize=" + pageSize + "&pagenumber=" + pageNumber;
 
     var xhr = new XMLHttpRequest();
 
@@ -166,7 +183,8 @@ function deleteEmployee(event) {
     var employeeId = event.target.dataset.employeeId;
 
     var baseURL = "https://localhost:5001/DeleteEmployee";
-    var queryString = "?employeeId=" + employeeId;
+    var search = inputEmployeesSearch.value;
+    var queryString = "?employeeId=" + employeeId + "&search=" + search + "&pagesize=" + pageSize + "&pagenumber=" + pageNumber;
 
     var xhr = new XMLHttpRequest();
 
@@ -239,11 +257,33 @@ function refreshEmployeeTable(employees) {
         var button = employeeDeleteButtons[i];
         button.addEventListener("click", deleteEmployee);
     }
+
+    var firstRec = pageSize * (pageNumber - 1) + 1;
+    var lastRec = firstRec + pageSize - 1;
+    var empCount = employee.employeeCount ?? 0;
+    if (lastRec > empCount) {
+        lastRec = empCount;
+    }
+
+    labelEmployeePaginationMessage.innerHTML = firstRec + " through " + lastRec + " of " + empCount;
+}
+
+function showEmployeesPrev() {
+    if (pageNumber > 1) {
+        pageNumber = pageNumber - 1
+    }
+    searchEmployees();
+}
+
+function showEmployeesNext() {
+    pageNumber = pageNumber + 1;
+    searchEmployees();
 }
 
 function clearEmployees() {
     dynamicEmployeeRows.innerHTML = "";
 }
 
+
 //Page load:
-//selectEmployees();
+searchEmployees();

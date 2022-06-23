@@ -260,7 +260,12 @@ function refreshEmployeeTable(employees) {
 
     var firstRec = pageSize * (pageNumber - 1) + 1;
     var lastRec = firstRec + pageSize - 1;
-    var empCount = employee.employeeCount ?? 0;
+    var empCount = 0;
+
+    if (typeof employee !== 'undefined') {
+        empCount = employee.employeeCount;
+    }
+
     if (lastRec > empCount) {
         lastRec = empCount;
     }

@@ -46,6 +46,20 @@ namespace webapp_01
             app.UseDefaultFiles();
             //jack - end
 
+            //jackmu - add rewrite - begin
+            app.Use(async (context, next) =>
+            {
+                var url = context.Request.Path.Value;
+
+                if (url.EndsWith("/home") || url.EndsWith("/employees") || url.EndsWith("/customers"))
+                {
+                    context.Request.Path = "/index.html";
+                }
+
+                await next();
+            });
+            //jackmu - add rewrite - end
+
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
